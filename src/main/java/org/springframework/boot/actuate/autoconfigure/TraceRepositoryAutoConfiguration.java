@@ -37,13 +37,15 @@ public class TraceRepositoryAutoConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean(TraceRepository.class)
-		public RedisTraceRepository redisTraceRepository(RedisTemplate<String, Trace> traceRedisTemplate) throws UnknownHostException {
+		public RedisTraceRepository redisTraceRepository(RedisTemplate<String, Trace> traceRedisTemplate)
+				throws UnknownHostException {
 			return new RedisTraceRepository(traceRedisTemplate);
 		}
 
 		@Bean
 		@ConditionalOnMissingBean(name = "traceRedisTemplate")
-		public RedisTemplate<String, Trace> traceRedisTemplate(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
+		public RedisTemplate<String, Trace> traceRedisTemplate(RedisConnectionFactory redisConnectionFactory)
+				throws UnknownHostException {
 			RedisTemplate<String, Trace> template = new RedisTemplate<String, Trace>();
 			Jackson2JsonRedisSerializer<Trace> serializer = new Jackson2JsonRedisSerializer<Trace>(Trace.class);
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -72,7 +74,8 @@ public class TraceRepositoryAutoConfiguration {
 					ObjectCodec objectCodec, JsonNode jsonNode) throws IOException {
 				JsonNode timestamp = jsonNode.get(TIME_STAMP);
 				JsonNode info = jsonNode.get(INFO);
-				Map<String, Object> result = objectMapper.convertValue(info, new TypeReference<Map<String, Object>>() {});
+				Map<String, Object> result = objectMapper.convertValue(info,
+						new TypeReference<Map<String, Object>>() {});
 				return new Trace(new Date(timestamp.asLong()), result);
 			}
 		}

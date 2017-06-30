@@ -43,7 +43,7 @@ public class RedisTraceRepository implements TraceRepository {
 	}
 
 	private static HttpServletRequest getRequest() {
-		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 		if (requestAttributes instanceof ServletRequestAttributes) {
 			return ((ServletRequestAttributes) requestAttributes).getRequest();
 		}
@@ -72,6 +72,5 @@ public class RedisTraceRepository implements TraceRepository {
 		}
 		return 0L;
 	}
-
 }
 
