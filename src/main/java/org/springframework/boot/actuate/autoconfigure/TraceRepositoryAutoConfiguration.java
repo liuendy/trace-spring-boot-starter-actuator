@@ -1,23 +1,5 @@
 package org.springframework.boot.actuate.autoconfigure;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.Map;
-
-import org.springframework.boot.actuate.trace.InMemoryTraceRepository;
-import org.springframework.boot.actuate.trace.RedisTraceRepository;
-import org.springframework.boot.actuate.trace.Trace;
-import org.springframework.boot.actuate.trace.TraceRepository;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -25,6 +7,21 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.springframework.boot.actuate.trace.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by wonwoo on 2017-06-29.
@@ -81,7 +78,17 @@ public class TraceRepositoryAutoConfiguration {
 		}
 	}
 
-	@ConditionalOnMissingBean(TraceRepository.class)
+	@ConditionalOnClass(MongoOperations.class)
+	static class MongoTraceRepositoryAutoConfiguration {
+
+		@Bean
+		@ConditionalOnMissingBean(TraceRepository.class)
+		public MongoTraceRepository mongoTraceRepository(MongoOperations mongoOperations)
+				throws UnknownHostException {
+			return new MongoTraceRepository(mongoOperations);
+		}
+	}
+		@ConditionalOnMissingBean(TraceRepository.class)
 	@Bean
 	public InMemoryTraceRepository traceRepository() {
 		return new InMemoryTraceRepository();
