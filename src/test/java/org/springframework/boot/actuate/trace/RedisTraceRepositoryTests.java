@@ -1,10 +1,10 @@
 package org.springframework.boot.actuate.trace;
 
-import java.util.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
