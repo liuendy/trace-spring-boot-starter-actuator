@@ -1,14 +1,14 @@
 {
   "properties": [
     {
-      "name": "trace.redis.start-key",
+      "name": "trace.page-key",
       "type": "java.lang.String",
-      "description": "Request start number key"
+      "description": "Request page number key"
     },
     {
-      "name": "trace.redis.end-key",
+      "name": "trace.size-key",
       "type": "java.lang.String",
-      "description": "Request end number key"
+      "description": "Request size number key"
     },
     {
       "name": "trace.redis.redis-key",

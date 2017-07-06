@@ -1,15 +1,19 @@
 package org.springframework.boot.actuate.trace;
 
-import org.springframework.data.mongodb.core.MongoOperations;
-
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 
 /**
  * Created by wonwoolee on 2017. 7. 2..
  */
-public class MongoTraceRepository implements TraceRepository {
+@ConfigurationProperties(prefix = "trace")
+public class MongoTraceRepository extends AbstractTraceRepository implements TraceRepository {
 
   private final MongoOperations mongoOperations;
 
@@ -18,12 +22,14 @@ public class MongoTraceRepository implements TraceRepository {
   }
 
   @Override
-  public List<Trace> findAll() {
-    return mongoOperations.findAll(Trace.class);
+  public List<Trace> findAll(HttpServletRequest request, Pageable pageable) {
+    Query query = new Query().with(pageable);
+    return mongoOperations.find(query, Trace.class);
   }
 
   @Override
-  public void add(Map<String, Object> traceInfo) {
-    mongoOperations.save(new Trace(new Date(), traceInfo));
+  public void add(Trace trace) {
+    mongoOperations.save(trace);
   }
+
 }
